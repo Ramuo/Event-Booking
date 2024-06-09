@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-form-item {
+  margin-bottom: 2px !important;
+}
+
+.ant-form-item-label {
+  padding: 0px !important;
+  padding-top: 2px !important;
+}
+a:hover {
+  color: #222831 !important;
+}
+
+table {
+  margin-top: 20px;
+  border: 1px solid #adadad;
+}

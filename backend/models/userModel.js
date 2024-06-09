@@ -17,18 +17,20 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
-        avatar: {
-            // type: String,
-            public_id: String,
-            url: String,
+        profilePicture: {
+            type: String,
+            default: "",
         },
         isAdmin: {
             type: Boolean,
             required: true,
             default: false,
         },
-        resetPasswordToken: String,
-        resetPasswordExpire: Date,
+        isActive: {
+            type: Boolean,
+            required: false,
+            default: true,
+        },
     },
     { timestamps: true }
 );

@@ -11,7 +11,11 @@ export default {
       lg: '1020px',
       xl: '1440px'
     },
-    extend: {},
+    extend: {
+      fontFamily :{
+        sans: ['Montserrat', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
