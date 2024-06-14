@@ -1,8 +1,46 @@
-import {Link} from "react-router-dom";
+import { useState, useEffect } from "react"; 
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import {Form, Input, Button} from "antd"
 import WelcomeContent from "./common/WelcomeContent";
+import Loader from "../../components/Loader"
+import {toast} from "react-toastify"
+
+import {useRegisterMutation} from "../../slices/userApiSlice"
+import {setCredentials} from "../../slices/authSlice";
 
 const RegisterPage = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [register, { isLoading }] = useRegisterMutation();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get('redirect') || '/';
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+      try {
+        const res = await register({ name, email, password }).unwrap();
+        dispatch(setCredentials({ ...res }));
+        navigate(redirect);
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -10,47 +48,43 @@ const RegisterPage = () => {
         <WelcomeContent />
       </div>
       <div className="h-screen flex items-center justify-center">
-        <Form
-          className="flex flex-col gap-2 w-96"
-          layout="vertical"
+        <form
+        className="flex flex-col gap-2 w-96"
+        onSubmit={submitHandler}
         >
           <h1 className="text-2xl font-bold text-gray-600">
             S'inscrire
           </h1>
-
-          <Form.Item
-            name="name"
-            required
-            label="Nom"
-            rules={[{required: true, message: "Le Nom est requis"}]}
+          <input 
+          type="text" 
+          placeholder="Nom" 
+          className="input input-bordered w-full max-w-md mb-2" 
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          />
+          <input 
+          type="email" 
+          placeholder="E-mail" 
+          className="input input-bordered w-full max-w-md mb-2" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          />
+          <input 
+          type="password" 
+          placeholder="Mot de passe" 
+          className="input input-bordered w-full max-w-md mb-2"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          />
+          <button 
+          type="submit"
+          className="btn bg-black text-white text-md w-full"
           >
-            <Input placeholder="Nom" />
-          </Form.Item>
-
-          <Form.Item
-            name="email"
-            required
-            label="Email"
-            rules={[{required: true, message: "E-mail est requis"}]}
-          >
-            <Input placeholder="Email" />
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            required
-            label="Mot de Passe"
-            rules={[{required: true, message: "Mot de passe est requis"}]}
-          >
-            <Input.Password placeholder="Mot de Passe" />
-          </Form.Item>
-
-          <Button type="primary" htmlType="submit" className="mt-2">
             Envoyer
-          </Button>
-
-          <Link to="/login">Vous avez déjà un compte? Se connecter</Link>
-        </Form>
+          </button>
+          <Link to={redirect ? `/login?redirect=${redirect}`: '/login'}>Vous avez déjà un compte? Se connecter</Link>
+          {isLoading  && <Loader/>}
+        </form>
       </div>
     </div>
   );

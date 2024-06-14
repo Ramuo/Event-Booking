@@ -9,7 +9,7 @@ import {notFound, errorHandler} from './middleware/errorMiddleware.js';
 
 
 import userRoute from './routes/userRoute.js';
-
+import eventRoute from "./routes/eventRoute.js";
 
 
 
@@ -32,7 +32,7 @@ app.use(cookieParser());
 //ROUTES
 
 app.use('/api/users', userRoute);
-
+app.use('/api/events', eventRoute);
 
 
 //STATIC ROUTE

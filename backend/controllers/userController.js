@@ -20,7 +20,7 @@ const login = asyncHandler(async(req, res)=>{
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
-            avatar: user.avatar.url
+            profilePicture: user.profilePicture
         })
     }else{
         res.status(401);
@@ -55,7 +55,7 @@ const register = asyncHandler(async(req, res)=>{
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
-            avatar: user.avatar.url
+            profilePicture: user.profilePicture
         });
     }else{
         res.status(400);
